@@ -1,0 +1,43 @@
+# Конфигурация Spring Boot приложения
+spring:
+  application:
+    name: notification-service
+  
+  # Конфигурация Kafka
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      group-id: notification-group
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+    properties:
+      spring.json.trusted.packages: "com.example.notificationservice.dto"
+      spring.json.type.mapping: "userEvent:com.example.notificationservice.dto.UserEvent"
+  
+  # Конфигурация почтового сервера
+  mail:
+    host: smtp.gmail.com  # Замените на ваш SMTP сервер
+    port: 587
+    username: ${SMTP_USERNAME:your-email@gmail.com}
+    password: ${SMTP_PASSWORD:your-app-password}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+        transport:
+          protocol: smtp
+    default-encoding: UTF-8
+
+# Конфигурация логирования
+logging:
+  level:
+    com.example.notificationservice: INFO
+    org.springframework.kafka: INFO
+    org.springframework.mail: DEBUG
+
+# Конфигурация сервера
+server:
+  port: 8081
